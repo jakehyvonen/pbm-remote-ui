@@ -3,7 +3,11 @@ presently using node version 16:
 curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
 sudo apt-get install -y nodejs
 
+
+
 and npm:
 usually installing node also installs npm. IF that doesn't happen, install it:
 sudo apt install npm
 
+much of the code is adapted from this tutorial:
+https://gamedevacademy.org/create-a-basic-multiplayer-game-in-phaser-3-with-socket-io-part-1/
