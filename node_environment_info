@@ -1,0 +1,9 @@
+presently using node version 16:
+
+curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+and npm:
+usually installing node also installs npm. IF that doesn't happen, install it:
+sudo apt install npm
+
