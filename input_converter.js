@@ -8,6 +8,10 @@ net = require('net');
 const PBM_enums = require('./enums.json');
 const SIE_actions = PBM_enums.SIE_Action;
 
+//these vectors correlate to directions on the 5 axes of the SIE
+//x and y are translation of the syringe toolhead
+//z rotates the table
+//u and v tilt the table
 const jog_vectors = {
     "plus_u":[1, 0, 0.0, 0.0, 0.0],
     "minus_u":[-1, 0, 0.0, 0.0, 0.0],
@@ -21,6 +25,7 @@ const jog_vectors = {
     "minus_z":[0, 0, 0.0, 0.0, -1.0],
 }
 
+//combine vectors to be able to make more complex movements
 function add_vectors(vec_A, vec_B)
 {
     var vec_C = [];
@@ -38,6 +43,10 @@ function add_vectors(vec_A, vec_B)
     return vec_C;
 }
 
+//map keys to vectors
+//WASD <-> tilting
+//arrows <-> translating the syringe
+//QE <-> rotating the table
 const keyboard_jog_dict = {
     "A":jog_vectors['plus_u'],
     "D":jog_vectors['minus_u'],
@@ -51,6 +60,9 @@ const keyboard_jog_dict = {
     "Q":jog_vectors['minus_z'],
 };
 
+//map keys to various SIE actions
+//these are all referenced from enums.json, 
+//which eventually will be the backend API
 const keyboard_action_dict = {
     "B":SIE_actions.Begin_Run,
     "N":SIE_actions.End_Run,
@@ -72,6 +84,7 @@ const keyboard_action_dict = {
     //"6":SIE_actions.Swap_Syringe,
 };
 
+//create arrays of the keys in our dicts
 const action_dict_keys = Object.keys(keyboard_action_dict);
 const jog_dict_keys = Object.keys(keyboard_jog_dict);
 
@@ -92,6 +105,7 @@ const send_tcp_msg = message => {
     });  
 };
 
+//receive input from our mapped action keys and send the associated command
 function handle_action_keydown(key)
 {
     //receives key as an array of [phaser.key, "Key"] for some reason
@@ -119,13 +133,16 @@ function handle_action_keydown(key)
     send_tcp_msg(command);
 }
 
-
 //convert keyboard keys down to commands
+//TODO: combine this with handle_action_keydown
+//Note: I tried to combine these awhile ago but there was some bug that 
+//I couldn't track down -JAH 09/25/22
 function handle_keyboard_data(keyboard_data)
 {
     //the command to send
     var command;
     var command_data = [];
+    //loop through the keyboard_data and see if any are mapped to an action
     keyboard_data.every(element => {
         console.log('element: ' + element);
         if(action_dict_keys.includes(element))
@@ -151,6 +168,7 @@ function handle_keyboard_data(keyboard_data)
             {//set data to the key's vector
                 command_data = keyboard_jog_dict[element];
             }
+            //we have to return true or the loop breaks somehow
             return true;
         }
     });
@@ -168,5 +186,7 @@ function handle_keyboard_data(keyboard_data)
     }
     send_tcp_msg(command);
 }
+
+//allow other modules to access these functions
 exports.handle_keyboard_data = handle_keyboard_data;
 exports.handle_action_keydown = handle_action_keydown;

@@ -15,5 +15,13 @@
     "socket.io": "^4.5.1"
   },
   "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jakehyvonen/pbm-remote-ui.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jakehyvonen/pbm-remote-ui/issues"
+  },
+  "homepage": "https://github.com/jakehyvonen/pbm-remote-ui#readme",
   "description": ""
 }

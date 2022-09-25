@@ -1,25 +1,26 @@
 import asyncio
 import logging
-import webbrowser
 
 #modified from https://docs.python.org/3/library/asyncio-protocol.html for reference
+
 #change this to false for remote operation
 is_local = True
 web_UI_port = 5623
 picam_port = 6005
 loop = asyncio.get_event_loop()
+
 class EchoServerClientProtocol(asyncio.Protocol):    
     def connection_made(self, transport):
         peername = transport.get_extra_info('peername')
-        print('Connection from {}'.format(peername))
+        print('Protocol Connection from {}'.format(peername))
         self.transport = transport
 
     def data_received(self, data):
         message = data.decode()
-        logging.debug('Protocol Data received: {!r}'.format(message))
-        ('Send: {!r}'.format(message))
+        print('Protocol Data received: {!r}'.format(message))
+        #print('Send: {!r}'.format(message))
         self.transport.write(data)
-        ('Close the client socket')
+        #print('Close the client socket')
         self.transport.close()
        
 
@@ -27,8 +28,8 @@ class EchoServerClientProtocol(asyncio.Protocol):
         # Each client connection will create a new protocol instance
         if is_local:
             self.server = await loop.create_server(EchoServerClientProtocol, '127.0.0.1', web_UI_port)
-            url = 'http://localhost:8081'
-            webbrowser.open(url)
+            # url = 'http://localhost:8081'
+            # webbrowser.open(url)
         else:
             #empty string for address for ipv4 io
             self.server = await loop.create_server(EchoServerClientProtocol, '', web_UI_port)
