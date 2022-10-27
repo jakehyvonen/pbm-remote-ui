@@ -18,6 +18,30 @@
 }
 
 
+#stream{
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+}
+
+#phasergame{
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+}
+
+#container{  
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+}
+
 #fsbutton{
   z-index: 11;
   position: absolute;

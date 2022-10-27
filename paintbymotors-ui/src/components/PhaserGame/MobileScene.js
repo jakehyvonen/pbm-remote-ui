@@ -5,9 +5,9 @@ import openSocket from 'socket.io-client';
 const socket = openSocket('http://192.168.1.195:8081');
 
 
-export default class HelloWorldScene extends Phaser.Scene {
+export default class MobileScene extends Phaser.Scene {
   constructor() {
-    super('helloworld')
+    super('mobile')
   } 
 
   init() {
@@ -16,7 +16,7 @@ export default class HelloWorldScene extends Phaser.Scene {
     this.gameWidthMiddle = this.gameWidth  / 2;
     this.gameHeightMiddle = this.gameHeight / 2;      
     this.staticXJsPos = this.gameWidthMiddle;
-    this.staticYJsPos = this.gameHeightMiddle + (this.gameHeightMiddle / 2) + (this.gameHeightMiddle / 4);
+    this.staticYJsPos = this.gameHeightMiddle;
     this.playerSpeed = 1;
     this.lastCursorDirection = "center";
     this.joystickConfig = {
@@ -36,8 +36,8 @@ export default class HelloWorldScene extends Phaser.Scene {
 
   preload() {
     //this.load.plugin('rexvirtualjoystickplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexvirtualjoystickplugin.min.js', true);
-    this.load.image('base', './assets/image/base.png');
-    this.load.image('thumb', './assets/image/thumb.png');
+    this.load.image('base', './assets/base.png');
+    this.load.image('thumb', './assets/thumb.png');
     this.load.plugin('rex-virtual-joystick-plugin"', VirtualJoystickPlugin, true);
    
   }
@@ -146,15 +146,7 @@ export default class HelloWorldScene extends Phaser.Scene {
     }
   }
 
-  updateJoystickState() {
-      let direction = '';
-      for (let key in this.cursorKeys) {
-          if (this.cursorKeys[key].isDown) {
-            direction += key;
-          }
-      }
-
-     
+  updateJoystickState() {     
       // Set debug info about the cursor
       this.setCursorDebugInfo();
   }
