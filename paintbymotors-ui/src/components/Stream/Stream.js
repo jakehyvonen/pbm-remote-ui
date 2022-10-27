@@ -6,13 +6,16 @@ export default class Stream extends React.Component {
     super(props);    
     const mediaSource = new MediaSource();
     mediaSource.addEventListener('sourceopen', () => this.handleSourceOpen, false);
-
   }
-  
+
   componentDidMount() {
     let canvas = document.getElementById("videocanvas");
+    //these settings make the canvas scale when resized
+    canvas.style.width = "100%";
+    canvas.style.height = "100%";
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
     let url = "ws://192.168.1.195:6789"
-
     new JSMpeg.Player(url, { canvas: canvas });
   }
  
