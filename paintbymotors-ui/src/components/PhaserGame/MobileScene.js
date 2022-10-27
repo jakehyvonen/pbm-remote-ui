@@ -84,8 +84,14 @@ export default class MobileScene extends Phaser.Scene {
     
     if (this.joyStick.force > this.joyStick.radius) { // Exceed radius
       const angle = Math.floor(this.joyStick.angle * 100) / 100;
-      newX = Math.cos(angle) * this.joyStick.radius;
-      newY = Math.sin(angle) * this.joyStick.radius;
+      const rad = angle * Math.PI / 180; 
+      var cosrad = Math.cos(rad);
+      var sinrad = Math.sin(rad);
+      console.log('rad: ' + rad);
+      console.log('cosrad: ' + cosrad);
+      console.log('sinrad: ' + sinrad);
+      newX = Math.cos(rad) * this.joyStick.radius;
+      newY = Math.sin(rad) * this.joyStick.radius;
     }
 
     console.log('normalizedX: ' + this.normalizedX);
