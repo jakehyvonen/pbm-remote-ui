@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Phaser from 'phaser'
 import VirtualJoystickPlugin from 'phaser3-rex-plugins/plugins/virtualjoystick-plugin.js';
+import Button from 'phaser3-rex-plugins/plugins/input/button/Button.js'
 import MobileScene from './MobileScene';
 
 class PhaserGame extends Component {
@@ -14,8 +15,8 @@ class PhaserGame extends Component {
 
         scale: {
             parent: "game",
-            width: 800,
-            height: 600,
+            width: 1280,
+            height: 720,
             mode: Phaser.Scale.FIT,
             autoCenter: Phaser.Scale.CENTER_BOTH,
         },
