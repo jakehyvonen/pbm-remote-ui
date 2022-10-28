@@ -1,3 +1,4 @@
+import Button from 'phaser3-rex-plugins/plugins/input/button/Button.js';
 import Phaser from 'phaser'
 import VirtualJoystickPlugin from 'phaser3-rex-plugins/plugins/virtualjoystick-plugin.js';
 import openSocket from 'socket.io-client';
@@ -12,7 +13,17 @@ export default class MobileScene extends Phaser.Scene {
   preload() {
     this.load.image('base', './assets/base.png');
     this.load.image('thumb', './assets/thumb.png');
+    this.load.image('blue1', './assets/blue-1.png');
+    this.load.image('blue1push', './assets/blue-1-pushed.png');
+    this.load.image('blue2', './assets/blue-2.png');
+    this.load.image('blue2push', './assets/blue-2-pushed.png');
+    this.load.image('blue3', './assets/blue-3.png');
+    this.load.image('blue3push', './assets/blue-3-pushed.png');
+    this.load.image('silverdown', './assets/silver-!arrowdown.png');
+    this.load.image('silverdownpush', './assets/silver-!arrowdown-pushed.png');
     this.load.plugin('rex-virtual-joystick-plugin"', VirtualJoystickPlugin, true);   
+		// sprites, note: see free sprite atlas creation tool here https://www.leshylabs.com/apps/sstool/
+  
   }
 
   init() {
@@ -32,8 +43,9 @@ export default class MobileScene extends Phaser.Scene {
     this.joystickCConfig = {
       x: this.gameWidth*5/6,
       y: this.gameHeight*3/6,
-      dir:'2dir',
+      dir:'left&right',
     }    
+    this.isDispensing = false;
     this.broadcastInterval = setInterval(() => this.normalizedXAndYFromForce(), 2000);
   }
    
@@ -52,6 +64,9 @@ export default class MobileScene extends Phaser.Scene {
     return newJoyStick;
   }
 
+  doBack(){
+
+  }
 
   create() {
     //this.socket = io();
@@ -63,6 +78,27 @@ export default class MobileScene extends Phaser.Scene {
     this.joyStickB = this.createVirtualJoystick(this.joystickBConfig);
     this.joyStickC = this.createVirtualJoystick(this.joystickCConfig);
     this.joysticks = [this.joyStick,this.joyStickB,this.joyStickC];
+
+    var dispenseSprite = this.add.sprite(this.gameWidth/6, this.gameHeight/2, 'silverdown');
+    dispenseSprite.scale = 5;
+   
+    this.dispenseButton = new Button(dispenseSprite);
+    this.dispenseButton.on('click', function()
+    {
+      console.log('clicky');
+      if(this.isDispensing){
+        dispenseSprite.setTexture('silverdown')
+        this.isDispensing = false;
+      }
+      else{
+        dispenseSprite.setTexture('silverdownpush')
+        this.isDispensing = true;
+        //socket emit dispensing
+      }
+    })
+
+    
+
     this.setCursorDebugInfo();
     this.updateJoystickState();
   }
@@ -82,8 +118,10 @@ export default class MobileScene extends Phaser.Scene {
       }
       joyStick.normalizedX = newX/joyStick.radius;//radius = max force
       joyStick.normalizedY = newY/joyStick.radius;
-      console.log('normalizedX: ' + joyStick.normalizedX);
-      console.log('normalizedY: ' + joyStick.normalizedY);
+      joyStick.normalizedX = (joyStick.normalizedX).toPrecision(3);
+      joyStick.normalizedY = (joyStick.normalizedY).toPrecision(3);
+      // console.log('normalizedX: ' + joyStick.normalizedX);
+      // console.log('normalizedY: ' + joyStick.normalizedY);
     });
 
     // var newX = this.joyStick.forceX;
