@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import Phaser from 'phaser'
 import VirtualJoystickPlugin from 'phaser3-rex-plugins/plugins/virtualjoystick-plugin.js';
-import Button from 'phaser3-rex-plugins/plugins/input/button/Button.js'
 import MobileScene from './MobileScene';
 
 class PhaserGame extends Component {
@@ -35,7 +34,6 @@ class PhaserGame extends Component {
             }]
         }
     };
-    //this.game = new Phaser.Game(this.config);    
     }
 
     componentDidMount() {

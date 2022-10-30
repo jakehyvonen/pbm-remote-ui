@@ -3,7 +3,6 @@ import Phaser from 'phaser'
 import VirtualJoystickPlugin from 'phaser3-rex-plugins/plugins/virtualjoystick-plugin.js';
 import openSocket from 'socket.io-client';
 
-// TODO: 'left&right' joystick for rotation??
 export default class MobileScene extends Phaser.Scene {
   constructor() {
     super('mobile')
@@ -70,20 +69,16 @@ export default class MobileScene extends Phaser.Scene {
     return newJoyStick;
   }
 
-  doBack(){
-
-  }
-
   create() {
     //this.socket = io();
     this.cursorDebugTextA = this.add.text(100, 200);
     this.cursorDebugTextB = this.add.text(100, 200);
     this.input.addPointer(1);
 
-    this.joyStick = this.createVirtualJoystick(this.joystickAConfig);
-    this.joyStickB = this.createVirtualJoystick(this.joystickBConfig);
-    this.joyStickC = this.createVirtualJoystick(this.joystickCConfig);
-    this.joysticks = [this.joyStick,this.joyStickB,this.joyStickC];
+    this.joystickA= this.createVirtualJoystick(this.joystickAConfig);
+    this.joystickB = this.createVirtualJoystick(this.joystickBConfig);
+    this.joystickC = this.createVirtualJoystick(this.joystickCConfig);
+    this.joysticks = [this.joystickA,this.joystickB,this.joystickC];
 
     var dispenseSprite = this.add.sprite(this.gameWidth/6, this.gameHeight/2, 'silverdown');
     dispenseSprite.scale = 5;
@@ -141,40 +136,40 @@ export default class MobileScene extends Phaser.Scene {
 
 
   normalizedXAndYFromForce(){
-    this.joysticks.forEach(function(joyStick){
-      var newX = joyStick.forceX;
-      var newY = joyStick.forceY;
+    this.joysticks.forEach(function(joystick){
+      var newX = joystick.forceX;
+      var newY = joystick.forceY;
       
-      if (joyStick.force > joyStick.radius) { // Exceed radius
-        const angle = Math.floor(joyStick.angle * 100) / 100;
+      if (joystick.force > joystick.radius) { // Exceed radius
+        const angle = Math.floor(joystick.angle * 100) / 100;
         const rad = angle * Math.PI / 180;   
         //force x and y to be values intersecting radius at joystick.angle
-        newX = Math.cos(rad) * joyStick.radius;
-        newY = Math.sin(rad) * joyStick.radius;
+        newX = Math.cos(rad) * joystick.radius;
+        newY = Math.sin(rad) * joystick.radius;
       }
-      joyStick.normalizedX = newX/joyStick.radius;//radius = max force
-      joyStick.normalizedY = newY/joyStick.radius;
-      joyStick.normalizedX = (joyStick.normalizedX).toPrecision(3);
-      joyStick.normalizedY = (joyStick.normalizedY).toPrecision(3);
-      // console.log('normalizedX: ' + joyStick.normalizedX);
-      // console.log('normalizedY: ' + joyStick.normalizedY);
+      joystick.normalizedX = newX/joystick.radius;//radius = max force
+      joystick.normalizedY = newY/joystick.radius;
+      joystick.normalizedX = (joystick.normalizedX).toPrecision(3);
+      joystick.normalizedY = (joystick.normalizedY).toPrecision(3);
+      // console.log('normalizedX: ' + joystick.normalizedX);
+      // console.log('normalizedY: ' + joystick.normalizedY);
     });
   }
 
   broadcastPositions() {
-    var positions = [this.joyStick.normalizedX, this.joyStick.normalizedY,
-      this.joyStickB.normalizedX, this.joyStickB.normalizedY, this.joyStickC.normalizedX]
+    var positions = [this.joystickA.normalizedX, this.joystickA.normalizedY,
+      this.joystickB.normalizedX, this.joystickB.normalizedY, this.joystickC.normalizedX]
     
     if(positions.some(el => el>0 || el<0)) {
       var msg = null;
       
-      //construct a msg if anythin is nonzero
+      //construct a msg if anything is nonzero
       msg = 'joystick_positions[';
-      msg += this.joyStick.normalizedX + ',';
-      msg += this.joyStick.normalizedY + ',';
-      msg += this.joyStickB.normalizedX + ',';
-      msg += this.joyStickB.normalizedY + ',';
-      msg += this.joyStickC.normalizedX + ']';
+      msg += this.joystickA.normalizedX + ',';
+      msg += this.joystickA.normalizedY + ',';
+      msg += this.joystickB.normalizedX + ',';
+      msg += this.joystickB.normalizedY + ',';
+      msg += this.joystickC.normalizedX + ']';
       console.log('msg: ' + msg);
 
       //this.socket.emit('a thing');
@@ -192,16 +187,16 @@ export default class MobileScene extends Phaser.Scene {
   }
 
   setCursorDebugInfo = function() {
-    const force = Math.floor(this.joyStick.force * 100) / 100;
-    const angle = Math.floor(this.joyStick.angle * 100) / 100;
-    const x_pos = this.joyStick.normalizedX;
-    const y_pos = this.joyStick.normalizedY;
+    const force = Math.floor(this.joystickA.force * 100) / 100;
+    const angle = Math.floor(this.joystickA.angle * 100) / 100;
+    const x_pos = this.joystickA.normalizedX;
+    const y_pos = this.joystickA.normalizedY;
     let text = `Force: ${force}\n`;
     text += `Angle: ${angle}\n`;
     text += `X: ${x_pos}\n`;
     text += `Y: ${y_pos}\n`;
     text += `FPS: ${this.sys.game.loop.actualFps}\n`;
     this.cursorDebugTextA.setText(text);
-    //this.joyStick.cursorDebugText.setText(text);
+    //this.joystickA.cursorDebugText.setText(text);
   }
 }
